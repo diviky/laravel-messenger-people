@@ -32,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NotificationChannels\\MessengerPeople\\MessengerPeopleServiceProvider"
+                "NotificationChannels\\MessengerPeople\\ServiceProvider"
             ]
         }
     },
