@@ -31,7 +31,7 @@ Add your configuration to your `config/services.php`:
 'messengerpeople' => [
     'client_id' => env('MP_CLIENT_ID'), 
     'client_secret' => env('MP_CLIENT_SECRET'),
-    'uuid' => env('MP_UUID'),
+    'number_id' => env('MP_NUMBER_ID'),
 ],
 ...
 ```

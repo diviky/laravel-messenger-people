@@ -59,16 +59,16 @@ abstract class ChannelAbstract
 
             $response = $this->client->send($message, $to);
 
-            if ($response->getStatusCode() !== 200) {
+            if (!in_array($response->getStatusCode(), [200, 202])) {
                 throw Exceptions\CouldNotSendNotification::serviceRespondedWithAnError($response);
             }
 
-        } catch (\Exception $exception) {
+        } catch (\Exception $e) {
             $event = new NotificationFailed(
                 $notifiable,
                 $notification,
                 $this->channel,
-                ['message' => $exception->getMessage(), 'exception' => $exception]
+                ['message' => $e->getMessage(), 'exception' => $e]
             );
 
             if (\function_exists('event')) { // Use event helper when possible to add Lumen support

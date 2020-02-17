@@ -61,8 +61,9 @@ class Client
      */
     protected function sendMessage(MessageAbstract $message, $to)
     {
+        $to   = $message->getTo() ?: $to;
         $data = [
-            'identifier' => $this->getFrom($message) . ':' . $message->getTo() ?: $to,
+            'identifier' => $this->getFrom($message) . ':' . preg_replace("/[^0-9]/", '', $to),
             'payload'    => $message->getPayload(),
         ];
 
@@ -80,7 +81,7 @@ class Client
      */
     protected function getFrom(MessageAbstract $message)
     {
-        if (!$from = $message->getFrom() ?: $this->config->get('uuid')) {
+        if (!$from = $message->getFrom() ?: $this->config->get('number_id')) {
             throw Exceptions\CouldNotSendNotification::missingFrom();
         }
 
@@ -89,14 +90,16 @@ class Client
 
     protected function getAccessToken()
     {
-        $response = $this->http->post('https://auth.messengerpeople.dev', [], [
-            'client_id'     => $this->config->get('client_id'),
-            'client_secret' => $this->config->get('client_secret'),
-            'grant_type'    => 'client_credentials',
-            'scope'         => 'messages:send messages:read messages:delete media:create',
+        $response = $this->http->request('POST', 'https://auth.messengerpeople.dev/token', [
+            'form_params' => [
+                'client_id'     => $this->config->get('client_id'),
+                'client_secret' => $this->config->get('client_secret'),
+                'grant_type'    => 'client_credentials',
+                'scope'         => 'messages:send messages:read messages:delete media:create',
+            ],
         ]);
 
-        $responseData = json_decode($response->getContent());
+        $responseData = json_decode($response->getBody());
 
         return $responseData->access_token;
     }
@@ -108,11 +111,14 @@ class Client
     public function sendPayload($payload)
     {
         $headers = [
-            'Content-Type:application/vnd.messengerpeople.v1+json',
-            'Accept:application/vnd.messengerpeople.v1+json',
-            'Authorization:Bearer ' . $this->getAccessToken(),
+            'Content-Type'  => 'application/vnd.messengerpeople.v1+json',
+            'Accept'        => 'application/vnd.messengerpeople.v1+json',
+            'Authorization' => 'Bearer ' . $this->getAccessToken(),
         ];
 
-        return $this->http->post(API_URL . '/messages', [], $payload, $headers, true);
+        return $this->http->request('POST', self::API_URL . '/messages', [
+            'headers' => $headers,
+            'body'    => \json_encode($payload),
+        ]);
     }
 }
