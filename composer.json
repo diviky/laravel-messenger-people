@@ -1,12 +1,12 @@
 {
-    "name": "laravel-notification-channels/messenger-people",
+    "name": "divity/laravel-messenger-people",
     "description": "Value First Notifications driver for sms",
-    "homepage": "https://github.com/laravel-notification-channels/messenger-people",
+    "homepage": "https://github.com/sankarsuda/laravel-messenger-people",
     "license": "MIT",
     "require": {
-        "illuminate/notifications": "^5|^6|^7",
-        "illuminate/support": "^5|^6|^7",
-        "illuminate/events": "^5|^6|^7"
+        "illuminate/notifications": "^5|^6|^7|^8",
+        "illuminate/support": "^5|^6|^7|^8",
+        "illuminate/events": "^5|^6|^7|^8"
     },
     "require-dev": {
         "mockery/mockery": "^0.9.5",

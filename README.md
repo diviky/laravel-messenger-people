@@ -18,7 +18,7 @@
 You can install the package via composer:
 
 ``` bash
-composer require laravel-notification-channels/messenger-people
+composer require divity/laravel-messenger-people
 ```
 
 ### Setting up your account
